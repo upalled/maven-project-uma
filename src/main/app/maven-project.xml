@@ -20,12 +20,11 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
-    <http:listener-config name="HTTPListener8081" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <http:listener-config name="HTTPListener8081" host="0.0.0.0" port="8085" doc:name="HTTP Listener Configuration"/>
     <db:derby-config name="Derby_Configuration" doc:name="Derby Configuration" url="jdbc:derby:memory:muleEmbeddedDB;create=true"/>
     <spring:beans>
         <spring:bean id="Bean" name="Bean" class="com.mulesoft.training.Database"/>
     </spring:beans>
-    <jms:activemq-connector name="Active_MQ" brokerURL="vm://localhost" validateConnections="true" doc:name="Active MQ"/>
     <flow name="sayHello">
         <http:listener config-ref="HTTPListener8081" path="/hello" doc:name="HTTP"/>
         <set-payload value="#['Hello Maven']" doc:name="Set Payload"/>
@@ -36,9 +35,5 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
             <db:parameterized-query><![CDATA[select * from FLIGHTS]]></db:parameterized-query>
         </db:select>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
-    </flow>
-    <flow name="logDatabase">
-        <jms:inbound-endpoint doc:name="JMS" connector-ref="Active_MQ" queue="log"/>
-        <logger level="INFO" doc:name="Logger" message="#[payload]"/>
     </flow>
 </mule>
